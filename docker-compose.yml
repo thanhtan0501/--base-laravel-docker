@@ -1,0 +1,43 @@
+services:
+    laravel-app:
+        build:
+            context: ./docker/app
+            dockerfile: Dockerfile
+        image: laravel-custom/app
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - '${REVERB_SERVER_PORT:-8080}:8080'
+        volumes:
+            - '.:/var/www/html'
+        depends_on:
+            - db
+    db:
+        image: 'postgres:15'
+        container_name: postgres_db
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+    smtp:
+        platform: linux/x86_64
+        image: mailhog/mailhog
+        container_name: mailhog-smtp
+        logging:
+            driver: 'none'
+        ports:
+            - "8003:1025"
+            - "8100:8025"
+    adminer:
+        image: adminer
+        ports:
+            - "${ADMINER_PORT:-8081}:8080"
+
+volumes:
+  pgdata:
+    driver: local
