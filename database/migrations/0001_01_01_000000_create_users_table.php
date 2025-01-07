@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,12 +14,27 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('full_name', 50);
+            $table->string('first_name', 20)->nullable();
+            $table->string('last_name', 20)->nullable();
+            $table->string('phone', 20)->nullable();
+            $table->string('province_id', 20)->nullable();
+            $table->string('district_id', 20)->nullable();
+            $table->string('ward_id', 20)->nullable();
+            $table->string('address')->nullable();
+            $table->string('avatar')->nullable();
+            $table->text('description')->nullable();
+            $table->text('user_agent')->nullable();
+            $table->text('ip')->nullable();
+            $table->dateTime('birthday')->nullable();
+            $table->enum("gender", Config::get("user.gender"))->default(Config::get("user.gender.other"));
+            $table->enum('role', Config::get("user.role"))->default(Config::get("user.role.user"));
             $table->rememberToken();
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

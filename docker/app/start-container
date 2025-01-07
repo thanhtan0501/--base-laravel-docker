@@ -1,0 +1,25 @@
+#!/bin/sh
+
+if [ ! -f "package-lock.json" ] || [ ! -f "composer.lock" ]; then
+    select-lock-file
+fi
+
+if [ ! -d "vendor" ]; then
+    composer install
+    if [ "$(uname -m)" = "aarch64" ]; then
+        cp -rf composer.lock composer.aarch64.lock
+    else
+        cp -rf composer.lock composer.x86_64.lock
+    fi
+fi
+
+if [ ! -d "node_modules" ]; then
+    npm install
+    if [ "$(uname -m)" = "aarch64" ]; then
+        cp -rf package-lock.json package-lock.aarch64.json
+    else
+        cp -rf package-lock.json package-lock.x86_64.json
+    fi
+fi
+
+/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
