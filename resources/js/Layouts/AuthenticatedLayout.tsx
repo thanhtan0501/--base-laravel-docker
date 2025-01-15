@@ -1,28 +1,29 @@
 import { User } from '@/Types/user';
-import { PropsWithChildren, ReactNode } from 'react';
+import { PropsWithChildren } from 'react';
 import Navigation from './Components/Navigation';
 
+import { SidebarProvider } from '@/Components/ui/sidebar';
+import { AppSidebar } from './Components/AppSidebar';
+
+import { Toaster } from '@/Components/ui/toaster';
+
 export default function Authenticated({
-    header,
     children,
     user,
-}: PropsWithChildren<{ header?: ReactNode; user: User }>) {
-    const menu = [
-        { name: 'Dashboard', route: 'dashboard' },
-        { name: 'User', route: 'admin.user' },
-    ];
+}: PropsWithChildren<{ user: User }>) {
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-            <Navigation user={user} menu={menu} />
-            {header && (
-                <header className="bg-white shadow dark:bg-gray-800">
-                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                        {header}
-                    </div>
-                </header>
-            )}
+        <SidebarProvider className="min-h-screen overflow-hidden bg-gray-100 dark:bg-gray-900">
+            <AppSidebar />
 
-            <main>{children}</main>
-        </div>
+            <main className="relative flex h-screen flex-1 flex-col overflow-hidden">
+                <Navigation user={user} />
+                <div className="h-lvh flex-1 overflow-y-auto py-10">
+                    <div className="mx-auto max-w-7xl px-6 lg:px-8">
+                        {children}
+                    </div>
+                </div>
+            </main>
+            <Toaster />
+        </SidebarProvider>
     );
 }

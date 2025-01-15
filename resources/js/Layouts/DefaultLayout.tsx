@@ -5,6 +5,7 @@ import Guest from './GuestLayout';
 
 export default function DefaultLayout({ children }: PropsWithChildren) {
     const user = usePage().props.auth.user;
+
     return (
         <>
             {user ? (

@@ -7,8 +7,6 @@ interface ProjectProps {
 }
 
 const Project: React.FC<ProjectProps> = ({ data }) => {
-    console.log(data);
-
     return <div>index</div>;
 };
 

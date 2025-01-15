@@ -10,7 +10,6 @@ class UserResource extends BaseResource
             'id',
             'avatar',
             'full_name',
-            'address',
             'email',
             'email_verified_at',
         ];
@@ -23,7 +22,13 @@ class UserResource extends BaseResource
             'avatar'      => fn() => $this->avatar,
             'address'      => fn() => $this->address,
             'full_name'        => fn() => $this->full_name,
+            'first_name'        => fn() => $this->first_name,
+            'last_name'        => fn() => $this->last_name,
             'email'      => fn() => $this->email,
+            "roles"      => fn() => $this->when($this->roles, fn() => RoleResource::collection($this->roles)),
+            "birthday"      => fn() => $this->birthday,
+            "status"      => fn() => $this->status,
+            "gender"      => fn() => $this->gender,
             'email_verified_at'        => fn() => $this->email_verified_at?->diffForHumans() ?? 'Email not verified',
         ];
     }

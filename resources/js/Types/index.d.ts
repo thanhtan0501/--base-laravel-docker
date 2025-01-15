@@ -10,6 +10,27 @@ export type PageProps<
 
 interface StateDefault {
     search?: string;
+    field?: string;
+    direction?: 'asc' | 'desc' | '';
+    limit?: string;
+    page?: number;
+}
+
+export interface PaginationLinks {
+    active: boolean;
+    label: string;
+    url: string | null;
+}
+
+export interface PaginationMeta {
+    current_page: number;
+    from: null | number;
+    path: string;
+    to: null | number;
+    total: number;
+    per_page: number;
+    links?: PaginationLinks[];
+    last_page: number;
 }
 
 export interface DataProps<TData, TState = StateDefault> {
@@ -21,9 +42,7 @@ export interface DataProps<TData, TState = StateDefault> {
             next: string | null;
             prev: string | null;
         };
-        meta: {
-            current_page: number;
-        };
+        meta: PaginationMeta;
     };
     state: TState;
 }

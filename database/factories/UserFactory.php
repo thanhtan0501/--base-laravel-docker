@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\Gender;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
@@ -25,7 +27,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            "gender" => $gender = fake()->randomElement(Config::get("user.gender")),
+            "gender" => $gender = fake()->randomElement(Gender::getValues()),
             'first_name' => $firstName = fake()->firstName($gender),
             'last_name' => $lastName = fake()->lastName($gender),
             'full_name' => $lastName . ' ' . $firstName,
@@ -49,5 +51,12 @@ class UserFactory extends Factory
         return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->assignRole('user');
+        });
     }
 }

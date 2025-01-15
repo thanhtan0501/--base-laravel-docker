@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\Gender;
+use App\Enums\Status;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Config;
@@ -26,11 +28,9 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('avatar')->nullable();
             $table->text('description')->nullable();
-            $table->text('user_agent')->nullable();
-            $table->text('ip')->nullable();
             $table->dateTime('birthday')->nullable();
-            $table->enum("gender", Config::get("user.gender"))->default(Config::get("user.gender.other"));
-            $table->enum('role', Config::get("user.role"))->default(Config::get("user.role.user"));
+            $table->enum("gender", allowed: Gender::asArray())->default(Gender::getDescription('other'));
+            $table->enum("status", Status::asArray())->default(Status::getDescription('active'));
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
